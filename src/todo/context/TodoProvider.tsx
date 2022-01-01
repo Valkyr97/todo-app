@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 
 import { TodoContext } from './TodoContext';
 import { TodoReducer } from './TodoReducer';
-import { TodoState } from '../interfaces/interfaces';
+import { TodoState, Todo } from '../interfaces/interfaces';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -10,18 +10,7 @@ interface Props {
 
 const initialState: TodoState = {
   todoCount: 2,
-  todos: [
-    {
-      id: '1',
-      desc: 'Recolectar las piedras del infinito',
-      completed: false,
-    },
-    {
-      id: '2',
-      desc: 'Piedra del alma',
-      completed: false,
-    },
-  ],
+  todos: [],
   completed: 0,
   pending: 2,
 };
@@ -29,9 +18,21 @@ const initialState: TodoState = {
 export const TodoProvider = ({ children }: Props) => {
   const [todoState, dispatch] = useReducer(TodoReducer, initialState);
 
-  const toggleTodo = (id: string) => {
-    dispatch({ type: 'toggleTodo', payload: { id } });
+  const updateTodo = (id: number, desc: string) => {
+    dispatch({ type: 'updateTodo', payload: { id, desc } });
   };
-  
-  return <TodoContext.Provider value={{ todoState, toggleTodo }}>{children}</TodoContext.Provider>;
+
+  const deleteTodo = (id: number) => {
+    dispatch({ type: 'deleteTodo', payload: { id } });
+  };
+
+  const addTodo = (todo: Todo) => {
+    dispatch({ type: 'addTodo', payload: todo });
+  };
+
+  return (
+    <TodoContext.Provider value={{ todoState, addTodo, updateTodo, deleteTodo }}>
+      <div className='p-3 h-screen bg-gray-50 dark:bg-gray-800'>{children}</div>
+    </TodoContext.Provider>
+  );
 };

@@ -2,10 +2,10 @@ import { TodoState, Todo } from '../interfaces/interfaces';
 
 type TodoAction =
   | { type: 'addTodo'; payload: Todo }
-  | { type: 'toggleTodo'; payload: { id: string } };
+  | { type: 'updateTodo'; payload: { id: number; desc: string } }
+  | { type: 'deleteTodo'; payload: { id: number } };
 
 export const TodoReducer = (state: TodoState, action: TodoAction): TodoState => {
-  console.log(action);
   switch (action.type) {
     case 'addTodo':
       return {
@@ -13,15 +13,18 @@ export const TodoReducer = (state: TodoState, action: TodoAction): TodoState => 
         todos: [...state.todos, action.payload],
       };
 
-    case 'toggleTodo':
+    case 'updateTodo':
       return {
         ...state,
-        todos: state.todos.map(({ ...t }) => {
-          if (t.id === action.payload.id) {
-            t.completed = !t.completed;
-          }
-          return t;
-        }),
+        todos: state.todos.map((t) =>
+          t.id === action.payload.id ? { ...t, desc: action.payload.desc } : t
+        ),
+      };
+
+    case 'deleteTodo':
+      return {
+        ...state,
+        todos: state.todos.filter((t) => t.id !== action.payload.id),
       };
 
     default:

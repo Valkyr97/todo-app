@@ -6,12 +6,10 @@ interface Props {}
 export const TodoList = (props: Props) => {
   const { todos } = useTodos();
   return (
-    <div>
-      <ul>
-        {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
-        ))}
-      </ul>
-    </div>
+    <dl className='bg-gray-200 rounded space-y-1 p-2'>
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} />
+      ))}
+    </dl>
   );
 };
